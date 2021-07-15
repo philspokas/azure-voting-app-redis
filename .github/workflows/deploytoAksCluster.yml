@@ -7,9 +7,9 @@ jobs:
     
     - uses: azure/docker-login@v1
       with:
-        login-server: demoacr072021.azurecr.io
-        username: ${{ secrets.acr_demoacr072021_username }}
-        password: ${{ secrets.acr_demoacr072021_password }}
+        login-server: demoacr15072021.azurecr.io
+        username: demoacr15072021
+        password: ${{ secrets.acr_demoacr15072021_password }}
     
     # - name: Build and push image to ACR
     #   id: build-image
@@ -20,12 +20,12 @@ jobs:
     - name: Build and push image to ACR
       id: build-image
       run: |
-        docker build "$GITHUB_WORKSPACE/azure-vote" -f  "azure-vote/Dockerfile" -t demoacr072021.azurecr.io/azure-vote-front:${{ github.sha }} --label dockerfile-path=azure-vote/Dockerfile
-        docker push demoacr072021.azurecr.io/azure-vote-front:${{ github.sha }}
+        docker build "$GITHUB_WORKSPACE/azure-vote" -f  "azure-vote/Dockerfile" -t demoacr15072021.azurecr.io/azure-vote-front:${{ github.sha }} --label dockerfile-path=azure-vote/Dockerfile
+        docker push demoacr15072021.azurecr.io/azure-vote-front:${{ github.sha }}
 
     - uses: azure/k8s-set-context@v1
       with:
-         kubeconfig: ${{ secrets.aks_demoaks1_kubeConfig }}
+         kubeconfig: ${{ secrets.aks_demoaks2_kubeConfig }}
       id: login
     
     - name: Create namespace
@@ -39,18 +39,17 @@ jobs:
     - uses: azure/k8s-create-secret@v1
       with:
         namespace: default
-        container-registry-url: demoacr072021.azurecr.io
-        container-registry-username: ${{ secrets.acr_demoacr072021_username }}
-        container-registry-password: ${{ secrets.acr_demoacr072021_password }}
-        secret-name: demoaks1dockerauth
+        container-registry-url: demoacr15072021.azurecr.io
+        container-registry-username: demoacr15072021
+        container-registry-password: ${{ secrets.acr_demoacr15072021_password }}
+        secret-name: demoaks2dockerauth
        
     - uses: azure/k8s-deploy@v1.2
       with:
         namespace: default
         manifests: |
-          manifests/deployment.yml
-          manifests/service.yml
+          azure-vote-all-in-one-redis.yaml
         images: |
           demoacr072021.azurecr.io/azure-vote-front:${{ github.sha }}
         imagepullsecrets: |
-          demoaks1dockerauth
+          demoaks2dockerauth
