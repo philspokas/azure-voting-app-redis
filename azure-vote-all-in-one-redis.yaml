@@ -53,11 +53,9 @@ spec:
       labels:
         app: azure-vote-front
     spec:
-      nodeSelector:
-        "beta.kubernetes.io/os": linux
       containers:
       - name: azure-vote-front
-        image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
+        image: demoacr072021.azurecr.io/azure-vote-front:v1
         ports:
         - containerPort: 80
         resources:

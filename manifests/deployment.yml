@@ -1,19 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-vote-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-vote-back
+  template:
+    metadata:
+      labels:
+        app: azure-vote-back
+    spec:
+      containers:
+      - name: azure-vote-back
+        image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+        env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        ports:
+        - containerPort: 6379
+          name: redis
+---
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: "demoaks1-93be"
+  name: azure-vote-front
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: "demoaks1-93be"
+      app: azure-vote-front
   template:
     metadata:
       labels:
-        app: "demoaks1-93be"
+        app: azure-vote-front
     spec:
       containers:
-        - name: "demoaks1-93be"
+        - name: azure-vote-front
           image: "demoacr072021.azurecr.io/demoaks1"
           ports:
           - containerPort: 80

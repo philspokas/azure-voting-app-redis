@@ -11,12 +11,18 @@ jobs:
         username: ${{ secrets.acr_demoacr072021_username }}
         password: ${{ secrets.acr_demoacr072021_password }}
     
+    # - name: Build and push image to ACR
+    #   id: build-image
+    #   run: |
+    #     docker build "$GITHUB_WORKSPACE/azure-vote" -f  "azure-vote/Dockerfile" -t demoacr072021.azurecr.io/demoaks1:${{ github.sha }} --label dockerfile-path=azure-vote/Dockerfile
+    #     docker push demoacr072021.azurecr.io/demoaks1:${{ github.sha }}
+
     - name: Build and push image to ACR
       id: build-image
       run: |
-        docker build "$GITHUB_WORKSPACE/azure-vote" -f  "azure-vote/Dockerfile" -t demoacr072021.azurecr.io/demoaks1:${{ github.sha }} --label dockerfile-path=azure-vote/Dockerfile
-        docker push demoacr072021.azurecr.io/demoaks1:${{ github.sha }}
-    
+        docker build "$GITHUB_WORKSPACE/azure-vote" -f  "azure-vote/Dockerfile" -t demoacr072021.azurecr.io/azure-vote-front:${{ github.sha }} --label dockerfile-path=azure-vote/Dockerfile
+        docker push demoacr072021.azurecr.io/azure-vote-front:${{ github.sha }}
+
     - uses: azure/k8s-set-context@v1
       with:
          kubeconfig: ${{ secrets.aks_demoaks1_kubeConfig }}
@@ -45,6 +51,6 @@ jobs:
           manifests/deployment.yml
           manifests/service.yml
         images: |
-          demoacr072021.azurecr.io/demoaks1:${{ github.sha }}
+          demoacr072021.azurecr.io/azure-vote-front:${{ github.sha }}
         imagepullsecrets: |
           demoaks1dockerauth
