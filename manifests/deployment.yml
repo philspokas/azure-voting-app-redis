@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "demoaks1-93be"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "demoaks1-93be"
+  template:
+    metadata:
+      labels:
+        app: "demoaks1-93be"
+    spec:
+      containers:
+        - name: "demoaks1-93be"
+          image: "demoacr072021.azurecr.io/demoaks1"
+          ports:
+          - containerPort: 80
